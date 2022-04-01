@@ -26,19 +26,40 @@ class Quizpage extends StatefulWidget {
 }
 
 class _QuizpageState extends State<Quizpage> {
+  List<Widget> scorekeeper = [
+    Icon(
+      Icons.check,
+      color: Colors.green,
+    ),
+    Icon(
+      Icons.close,
+      color: Colors.red,
+    ),
+    Icon(
+      Icons.check,
+      color: Colors.green,
+    ),
+  ];
+  List<String> questions = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.',
+  ];
+  List<bool> answer=[true,false,false];
+  int questionno = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        const Expanded(
+        Expanded(
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where question go',
+                questions[questionno],
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -58,7 +79,16 @@ class _QuizpageState extends State<Quizpage> {
                   fontSize: 20,
                 ),
               ),
-              onPressed: (){},
+              onPressed: () {
+                bool coorectanswer=answer[questionno];
+                if(coorectanswer==true){print('nice');}
+                else{print('fuck u');;}
+
+                setState(() {
+                  questionno++;
+                });
+                print(questionno);
+              },
             ),
           ),
         ),
@@ -75,16 +105,21 @@ class _QuizpageState extends State<Quizpage> {
                   fontSize: 20,
                 ),
               ),
-              onPressed: (){},
+              onPressed: () {
+                bool coorectanswer=answer[questionno];
+                if(coorectanswer==false){print('nice');}
+                else{print('fuck u');;}
+
+                setState(() {
+                  questionno++;
+                });
+                print(questionno);
+              },
             ),
           ),
         ),
         Row(
-          children: <Widget>[
-            Icon(Icons.check,color: Colors.green,),
-            Icon(Icons.close,color: Colors.red,),
-            Icon(Icons.check,color: Colors.green,),
-          ],
+          children: scorekeeper,
         )
       ],
     );
