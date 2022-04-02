@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'quizbrain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+Quizbrain quizbrain = Quizbrain();
 
 void main() => runApp(const Quizzler());
 
@@ -26,27 +30,38 @@ class Quizpage extends StatefulWidget {
 }
 
 class _QuizpageState extends State<Quizpage> {
-  List<Widget> scorekeeper = [
-    Icon(
-      Icons.check,
-      color: Colors.green,
-    ),
-    Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
-    Icon(
-      Icons.check,
-      color: Colors.green,
-    ),
-  ];
-  List<String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.',
-  ];
-  List<bool> answer=[true,false,false];
-  int questionno = 0;
+  int score=0;
+  List<Widget> scorekeeper = [];
+  void checkans(bool userpickedans) {
+    bool correctans = quizbrain.getcorrectans();
+    setState(() {
+      if(quizbrain.isfinished()==true){
+        Alert(context: context,title: 'FINISHED',desc: 'Score=$score').show();
+        quizbrain.reset();
+        scorekeeper=[];
+
+      }
+      else{ if(userpickedans == correctans) {
+        score++;
+        scorekeeper.add(
+          Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+          
+        );
+      } else {
+        scorekeeper.add(
+          Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+      quizbrain.nextquestion();
+    }});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -59,7 +74,7 @@ class _QuizpageState extends State<Quizpage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionno],
+                quizbrain.getquestiontext(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -80,14 +95,7 @@ class _QuizpageState extends State<Quizpage> {
                 ),
               ),
               onPressed: () {
-                bool coorectanswer=answer[questionno];
-                if(coorectanswer==true){print('nice');}
-                else{print('fuck u');;}
-
-                setState(() {
-                  questionno++;
-                });
-                print(questionno);
+                checkans(true);
               },
             ),
           ),
@@ -106,15 +114,8 @@ class _QuizpageState extends State<Quizpage> {
                 ),
               ),
               onPressed: () {
-                bool coorectanswer=answer[questionno];
-                if(coorectanswer==false){print('nice');}
-                else{print('fuck u');;}
-
-                setState(() {
-                  questionno++;
-                });
-                print(questionno);
-              },
+              checkans(false);
+              }
             ),
           ),
         ),
